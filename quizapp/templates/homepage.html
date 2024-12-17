@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Homepage</title>
+</head>
+<body>
+    <h1>Welcome, {{ user.username }}</h1>
+    <h2>Available Quizzes</h2>
+    <ul>
+        {% for quiz in quizzes %}
+            <li><a href="{% url 'quiz_detail' quiz.id %}">{{ quiz.name }}</a></li>
+        {% empty %}
+            <p>No quizzes available</p>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'create_quiz' %}">Create Quiz</a>
+    <a href="{% url 'history' %}">History</a>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Questions to {{ quiz.name }}</title>
+</head>
+<body>
+    <h1>Add Questions to {{ quiz.name }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="question_text">Question:</label>
+        <input type="text" id="question_text" name="question_text" required>
+        <br>
+        {% for i in "1234" %}
+            <label>Option {{ forloop.counter }}:</label>
+            <input type="text" name="option_{{ forloop.counter }}" required>
+            <input type="checkbox" name="correct_{{ forloop.counter }}"> Correct
+            <br>
+        {% endfor %}
+        <button type="submit">Add Question</button>
+        <button type="submit" name="done">Done</button>
+    </form>
+</body>
+</html>

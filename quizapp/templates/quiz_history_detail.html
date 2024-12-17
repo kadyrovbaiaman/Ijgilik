@@ -1,0 +1,28 @@
+{% load custom_tags %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz History - {{ history.quiz.name }}</title>
+</head>
+<body>
+    <h1>{{ history.quiz.name }}</h1>
+    {% for question in questions %}
+    <h3>{{ question.text }}</h3>
+    <ul>
+        {% for option in question.option_set.all %}
+            <li>
+                {{ option.text }}
+                {% if user_answers|dict_get:question.id == option %}
+                    (Your Answer)
+                {% endif %}
+                {% if option.is_correct %}
+                    (Correct)
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endfor %}
+    <a href="{% url 'homepage' %}">Back to Homepage</a>
+</body>
+</html>

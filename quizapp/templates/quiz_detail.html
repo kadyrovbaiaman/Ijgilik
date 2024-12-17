@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ quiz.name }}</title>
+</head>
+<body>
+    <h1>{{ quiz.name }}</h1>
+    <p>Quiz Description Here</p>
+    <a href="{% url 'start_quiz' quiz.id %}">Start Quiz</a>
+</body>
+</html>

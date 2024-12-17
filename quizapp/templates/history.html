@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz History</title>
+</head>
+<body>
+    <h1>History</h1>
+    <ul>
+        {% for history in histories %}
+            <li>
+                <a href="{% url 'quiz_history_detail' history.id %}">
+                    {{ history.quiz.name }} - {{ history.date_taken }} - Score: {{ history.score }}
+                </a>
+            </li>
+        {% empty %}
+            <p>No history available</p>
+        {% endfor %}
+    </ul>
+</body>
+</html>

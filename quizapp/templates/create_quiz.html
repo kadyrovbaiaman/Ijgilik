@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Quiz</title>
+</head>
+<body>
+    <h1>Create a New Quiz</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create Quiz</button>
+    </form>
+</body>
+</html>
