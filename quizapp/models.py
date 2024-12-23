@@ -31,3 +31,7 @@ class History(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.quiz.name}"
+class UserAnswer(models.Model):
+    which_history = models.ForeignKey(History, on_delete=models.CASCADE)
+    u_answer = models.ForeignKey(Option, on_delete=models.CASCADE)
+    

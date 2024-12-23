@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .models import Quiz, Question, Option, History
+from .models import Quiz, Question, Option, History, UserAnswer
 from .forms import QuizForm, QuestionForm, OptionForm
 
 def login_page(request):
@@ -45,13 +45,22 @@ def submit_quiz(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)
     questions = quiz.question_set.all()
     score = 0
+    history = History.objects.create(user=request.user, quiz=quiz, score=0)
     for question in questions:
         selected_option_id = request.POST.get(str(question.id))
         if selected_option_id:
-            option = Option.objects.get(id=selected_option_id)
-            if option.is_correct:
-                score += 1
-    History.objects.create(user=request.user, quiz=quiz, score=score)
+            try:
+                option = Option.objects.get(id=selected_option_id, question=question)
+                if option.is_correct:
+                    score += 1
+                UserAnswer.objects.create( 
+                    which_history=history,
+                    u_answer=option
+                )
+            except Option.DoesNotExist:
+                pass
+    history.score = score
+    history.save()
     return render(request, 'result.html', {'score': score, 'total': questions.count()})
 
 @login_required
@@ -102,22 +111,22 @@ def history(request):
 
 @login_required
 def quiz_history_detail(request, history_id):
+    # Get the History object
     history = get_object_or_404(History, id=history_id)
+
+    # Fetch all questions related to the quiz
     questions = history.quiz.question_set.all()
 
-    # Build user_answers as {question_id: selected_option_object}
-    user_answers = {}
-    for question in questions:
-        selected_option_id = request.POST.get(str(question.id))  # Assuming POST data
-        if selected_option_id:
-            try:
-                user_answers[question.id] = Option.objects.get(id=selected_option_id)
-            except Option.DoesNotExist:
-                user_answers[question.id] = None
+    # Fetch UserAnswer objects for the given history
+    user_answers = UserAnswer.objects.filter(which_history=history)
 
-    # Pass the context to the template
+    # Map each question to the user's selected answer (Option)
+    user_answers_dict = {ua.u_answer.question.id: ua.u_answer for ua in user_answers}
+
+    # Pass everything to the template
     return render(request, 'quiz_history_detail.html', {
         'history': history,
         'questions': questions,
-        'user_answers': user_answers,
+        'user_answers': user_answers_dict,  # This is now keyed by question ID
     })
+                                                                           

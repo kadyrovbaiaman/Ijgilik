@@ -13,9 +13,12 @@
                 <label>
                     <input type="radio" name="{{ question.id }}" value="{{ option.id }}">
                     {{ option.text }}
-                </label>
+                </label><br>
             {% endfor %}
         {% endfor %}
+        
+        <!-- Spacing before the submit button -->
+        <br>
         <button type="submit">Submit</button>
     </form>
 </body>
