@@ -129,4 +129,4 @@ def quiz_history_detail(request, history_id):
         'questions': questions,
         'user_answers': user_answers_dict,  # This is now keyed by question ID
     })
-                                                                           
+                                                                  

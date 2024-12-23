@@ -2,23 +2,66 @@
 <html>
 <head>
     <title>{{ quiz.name }}</title>
+    <style>
+        body {
+            background-color: #f9f9f9; /* Light neutral color for a clean look */
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #333333;
+            text-align: center; /* Centers the title */
+        }
+        form {
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            text-align: left; /* Aligns questions and options to the left */
+        }
+        label {
+            display: block; /* Makes each option start on a new line */
+            margin-bottom: 5px; /* Adjusts spacing between options */
+        }
+        button {
+            display: block; /* Makes the button a block-level element */
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px; /* Makes the button text slightly larger */
+            margin: 20px auto 0; /* Centers the button horizontally */
+        }
+        button:hover {
+            background-color: #357ABD;
+        }
+        .separator {
+            margin: 20px 0; /* Adds margin around the separator line */
+            border-top: 1px solid #ddd; /* Light gray line */
+        }
+    </style>
 </head>
 <body>
     <h1>{{ quiz.name }}</h1>
     <form method="post" action="{% url 'submit_quiz' quiz.id %}">
         {% csrf_token %}
         {% for question in questions %}
-            <p>{{ question.text }}</p>
+            <p><strong>Question {{ forloop.counter }}:</strong> {{ question.text }}</p>
             {% for option in question.option_set.all %}
                 <label>
                     <input type="radio" name="{{ question.id }}" value="{{ option.id }}">
                     {{ option.text }}
-                </label><br>
+                </label>
             {% endfor %}
+            
+            <!-- Separator Line after each question -->
+            <div class="separator"></div>
         {% endfor %}
         
         <!-- Spacing before the submit button -->
-        <br>
         <button type="submit">Submit</button>
     </form>
 </body>
